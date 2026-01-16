@@ -91,10 +91,3 @@ publishing {
         mavenLocal()
     }
 }
-
-tasks.register('publishToMavenLocal') {
-    dependsOn 'publish'
-    doLast {
-        println 'Published to Maven Local repository'
-    }
-}
