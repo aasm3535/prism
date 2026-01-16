@@ -18,26 +18,6 @@ dependencies {
 }
 ```
 
-Or use as a local project:
-
-```gradle
-dependencies {
-    implementation project(':Prism')
-}
-```
-
-### Maven
-
-Add to your `pom.xml`:
-
-```xml
-<dependency>
-    <groupId>net.prism</groupId>
-    <artifactId>Prism</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
-
 ## Quick Start
 
 ### Basic Usage - Load and Render
