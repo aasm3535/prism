@@ -2,23 +2,6 @@
 
 Lightweight OpenGL shader management library for Java with fluent API, caching, and preprocessor support.
 
-## Features
-
-- Fluent API for shader binding and uniform management
-- Automatic uniform location caching for performance
-- Preprocessor support for #include directives
-- Centralized shader manager with lazy loading
-- Comprehensive error handling with GLSL diagnostics
-- Type-safe uniform methods for all GLSL types
-- Thread-safe manager using ConcurrentHashMap
-
-## Requirements
-
-- Java 11+
-- Gradle 6.0+
-- LWJGL 3.3+
-- OpenGL 3.2+
-
 ## Installation
 
 ### Gradle
