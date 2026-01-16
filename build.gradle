@@ -1,15 +1,59 @@
 plugins {
     id 'java'
+    id 'java-library'
+    id 'maven-publish'
 }
 
 group = 'net.prism'
 version = '1.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
+    withSourcesJar()
+    withJavadocJar()
 }
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+def lwjglVersion = "3.3.4"
+
+def lwjglNatives = {
+    def os = System.getProperty("os.name").toLowerCase()
+    def arch = System.getProperty("os.arch")
+
+    if (os.contains("windows")) {
+        return arch.contains("64") ? "natives-windows" : "natives-windows-x86"
+    } else if (os.contains("linux")) {
+        return arch.contains("arm") || arch.contains("aarch64")
+                ? "natives-linux-arm64"
+                : "natives-linux"
+    } else if (os.contains("mac")) {
+        return arch.contains("aarch64")
+                ? "natives-macos-arm64"
+                : "natives-macos"
+    }
+    return "natives-linux"
+}()
+
 dependencies {
+    compileOnly "org.lwjgl:lwjgl:${lwjglVersion}"
+    compileOnly "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+
+    compileOnly "org.jetbrains:annotations:24.1.0"
+
+    testImplementation "org.lwjgl:lwjgl:${lwjglVersion}"
+    testImplementation "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+    testImplementation "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+
+    testRuntimeOnly "org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}"
+    testRuntimeOnly "org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}"
+    testRuntimeOnly "org.lwjgl:lwjgl-glfw:${lwjglVersion}:${lwjglNatives}"
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -17,4 +61,40 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom {
+                name = 'Prism'
+                description = 'Lightweight OpenGL shader library'
+                url = 'https://github.com/aasm3535/prism'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "local"
+            url = layout.buildDirectory.dir("repo")
+        }
+        mavenLocal()
+    }
+}
+
+tasks.register('publishToMavenLocal') {
+    dependsOn 'publish'
+    doLast {
+        println 'Published to Maven Local repository'
+    }
 }
