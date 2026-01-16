@@ -9,10 +9,6 @@ Lightweight OpenGL shader management library for Java with fluent API, caching, 
 Add to your `build.gradle`:
 
 ```gradle
-repositories {
-    mavenLocal()
-}
-
 dependencies {
     implementation 'net.prism:Prism:1.0.0'
 }
